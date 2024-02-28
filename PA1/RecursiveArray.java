@@ -122,8 +122,8 @@ public class RecursiveArray {
     }
 
     private void sortAscendingHelper(int index) {
-        if (index < array.length - 1) {
-            int minIndex = findMinIndex(index, index + 1);
+        if (index < array.length) {
+            int minIndex = findMinIndex(index, index);
             if (minIndex != index) {
                 swap(index, minIndex);
             }
@@ -132,12 +132,14 @@ public class RecursiveArray {
     }
 
     private int findMinIndex(int currentIndex, int minIndex) {
-        if (minIndex < array.length) {
-            if (array[minIndex] < array[currentIndex]) {
-                return findMinIndex(minIndex, minIndex + 1);
+        if (currentIndex < array.length) {
+            if (array[currentIndex] < array[minIndex]) {
+                return findMinIndex(currentIndex + 1, currentIndex);
+            } else {
+                return findMinIndex(currentIndex + 1, minIndex);
             }
         }
-        return currentIndex;
+        return minIndex;
     }
 
     private void swap(int index1, int index2) {
@@ -151,8 +153,8 @@ public class RecursiveArray {
     }
 
     private void sortDescendingHelper(int index) {
-        if (index < array.length - 1) {
-            int maxIndex = findMaxIndex(index, index + 1);
+        if (index < array.length) {
+            int maxIndex = findMaxIndex(index, index);
             if (maxIndex != index) {
                 swap(index, maxIndex);
             }
@@ -161,11 +163,13 @@ public class RecursiveArray {
     }
 
     private int findMaxIndex(int currentIndex, int maxIndex) {
-        if (maxIndex < array.length) {
+        if (currentIndex < array.length) {
             if (array[maxIndex] > array[currentIndex]) {
-                return findMaxIndex(maxIndex, maxIndex + 1);
+                return findMaxIndex(currentIndex + 1, maxIndex);
+            } else {
+                return findMaxIndex(currentIndex + 1, currentIndex);
             }
         }
-        return currentIndex;
+        return maxIndex;
     }
 }

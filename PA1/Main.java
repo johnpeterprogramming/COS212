@@ -25,9 +25,20 @@ public class Main {
         array2.sortDescending();
         System.out.println("Array 2: " + array2.toString());
 
-        array3.sortAscending();
+        System.out.println("Array before sort 3: " + array3.toString());
+        array3.sortDescending();
+        System.out.println("Array after sort 3: " + array3.toString());
+
+        array3.sortDescending();
         System.out.println("Array 3: " + array3.toString());
 
+        array1.sortAscending();
+        System.out.println("Array 1: " + array1.toString());
+        System.out.println("Array 1 is in ascending: " + array1.isAscending());
 
+        array1.sortDescending();
+        System.out.println("Array 1: " + array1.toString());
+        System.out.println("Array 1 is in descending: " + array1.isDescending());
+        System.out.println("Array 1 is in ascending: " + array1.isAscending());
     }
 }
