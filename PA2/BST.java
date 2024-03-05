@@ -57,9 +57,15 @@ public class BST<T extends Comparable<T>> {
         if (node == null) {
             return new BinaryNode<T>(data);
         } else {
-            if (data.compareTo(node.data) < 0)
+            int intDataCompare;
+            if (data instanceof String) {
+                intDataCompare = Integer.parseInt((String) data) - Integer.parseInt((String) node.data);
+            } else {
+                intDataCompare = data.compareTo(node.data);
+            }
+            if (intDataCompare < 0)
                 node.left = insertHelper(data, node.left);
-            else if (data.compareTo(node.data) > 0) 
+            else if (intDataCompare > 0) 
                 node.right = insertHelper(data, node.right);
             return node;
         }
@@ -138,11 +144,17 @@ public class BST<T extends Comparable<T>> {
     }
 
     public boolean isSuperficiallyBalanced() {
-        return false;
+        return isSuperficiallyBalancedHelper(root);
+    }
+    private boolean isSuperficiallyBalancedHelper(BinaryNode<T> node) {
+        if (node == null)
+            return true;
+        return Math.abs(getHeightHelper(node.left) - getHeightHelper(node.right)) <= 1;
+
     }
 
     public BST<T> extractBiggestSuperficiallyBalancedSubTree() {
-        return null;
+        return this;
     }
     ///////////////
 

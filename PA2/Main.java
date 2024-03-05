@@ -86,12 +86,27 @@ public class Main {
         bst4.insert("10");
         bst4.insert("-1");
 
+        // System.out.println(bst4.toString());
+        // Test 8 - String insert
         assertEquals(bst4.toString(),
                      "│   ┌── 12\n" +
                      "│   │   │   ┌── 10\n" +
                      "│   │   └── 3\n" + 
                      "└── 1\n" + 
                      "    └── -1\n");
+
+        BST<Character> bst5 = new BST<Character>();
+        bst5.insert('3');
+        bst5.insert('9');
+        bst5.insert('1');
+
+        // Test 9 - Char insert
+        assertEquals(bst5.toString(), 
+                     "│   ┌── 9\n" +
+                     "└── 3\n" + 
+                     "    └── 1\n");
+
+        // System.out.println(bst5.toString());
 
         endSuite();
     }
@@ -142,13 +157,28 @@ public class Main {
     public static void task3() {
         startSuite("isSuperficiallyBalanced, extractBiggestSuperficiallyBalancedSubtree");
         BST<Integer> bst1 = new BST<Integer>();
-        bst1.insert(0);
-        bst1.insert(22);
-        bst1.insert(80);
-        bst1.insert(7);
         
+        bst1.insert(0);
+        bst1.insert(-2);
+        bst1.insert(8);
+        bst1.insert(-3);
+        bst1.insert(-1);
+        bst1.insert(6);
+        bst1.insert(11);
 
+        // Test 1 - isSuperficiallyBalanced yes
         assertEquals(bst1.isSuperficiallyBalanced(), true);
+
+        bst1.delete(11);
+        System.out.println(bst1.toString());
+        // Test 2 - isSuperficiallyBalanced - no
+        assertEquals(bst1.isSuperficiallyBalanced(), false);
+
+        // Test 2 - extractBiggestSuperficiallyBalancedSubtree
+        assertEquals(bst1.extractBiggestSuperficiallyBalancedSubTree().toString(), 
+                    "│   ┌── -1\n" +
+                    "└── -2\n" + 
+                    "    └── -3\n");  
 
         endSuite();
     }
