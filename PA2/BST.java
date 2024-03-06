@@ -143,18 +143,49 @@ public class BST<T extends Comparable<T>> {
         return getNumLeavesHelper(node.left) + getNumLeavesHelper(node.right);
     }
 
+
     public boolean isSuperficiallyBalanced() {
         return isSuperficiallyBalancedHelper(root);
     }
     private boolean isSuperficiallyBalancedHelper(BinaryNode<T> node) {
-        if (node == null)
+        if (node == null) {
             return true;
-        return Math.abs(getHeightHelper(node.left) - getHeightHelper(node.right)) <= 1;
-
+        }
+        
+        int leftSubtreeSize = getSize(node.left);
+        int rightSubtreeSize = getSize(node.right);
+        
+        if (leftSubtreeSize != rightSubtreeSize) {
+            return false;
+        }
+        return isSuperficiallyBalancedHelper(node.left) && isSuperficiallyBalancedHelper(node.right);
+    }
+    private int getSize(BinaryNode<T> node) {
+        if (node == null) {
+            return 0;
+        }
+        return 1 + getSize(node.left) + getSize(node.right);
     }
 
     public BST<T> extractBiggestSuperficiallyBalancedSubTree() {
-        return this;
+        return extractBiggestSuperficiallyBalancedSubTreeHelper(root);
+    }
+    private BST<T> extractBiggestSuperficiallyBalancedSubTreeHelper(BinaryNode<T> node) {
+        if (node == null) {
+            return new BST<T>();
+        }
+        if (isSuperficiallyBalancedHelper(node)) {
+            BST<T> newBST = new BST<T>();
+            newBST.root = node;
+            return newBST;
+        }
+        BST<T> left = extractBiggestSuperficiallyBalancedSubTreeHelper(node.left);
+        BST<T> right = extractBiggestSuperficiallyBalancedSubTreeHelper(node.right);
+        if (getSize(left.root) >= getSize(right.root)) {
+            return left;
+        } else {
+            return right;
+        }
     }
     ///////////////
 

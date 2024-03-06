@@ -170,7 +170,9 @@ public class Main {
         assertEquals(bst1.isSuperficiallyBalanced(), true);
 
         bst1.delete(11);
-        System.out.println(bst1.toString());
+        bst1.delete(8);
+
+        // System.out.println(bst1.toString());
         // Test 2 - isSuperficiallyBalanced - no
         assertEquals(bst1.isSuperficiallyBalanced(), false);
 
