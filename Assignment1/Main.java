@@ -10,20 +10,11 @@ public class Main {
     public static int TESTS_RUN = 0;
     public static int TESTS_PASSED = 0;
     public static void main(String[] args) {
-        if (args.length == 0) {
-            task1();
-            task2();
-        } else {
-            int taskNum = Integer.valueOf(args[0]);
-            switch (taskNum) {
-                case 1:
-                    task1();
-                    break;
-                case 2:
-                    task2();
-                    break;
-            }
-        }
+
+        task1();
+        task2();
+        task3();
+
         endAll();
 
     }
@@ -67,7 +58,7 @@ public class Main {
     }
 
     public static void task2() {
-        startSuite("Maze");
+        startSuite("Maze basic");
 
         Maze maze1 = new Maze("input.txt");
         Maze maze2 = new Maze(maze1);
@@ -91,17 +82,70 @@ public class Main {
         // Test 3
         assertEquals(maze3.toString(), 
                     "-------X--\n" + 
-                    "XXXXXX-X--\n");
+                    "XXXXXX-X--");
 
         // Test 4
         assertEquals(maze4.toString(), "Empty Map");
 
-        // System.out.println(m.solve(3, 3, 1, 0));
-        // System.out.println(m.validStarts(0, 0));
 
         endSuite();
     }
 
+    public static void task3() {
+        startSuite("Maze STUFF");
+
+        // Easy Maze
+        Maze maze1 = new Maze("input.txt");
+        // Hard Maze
+        Maze maze2 = new Maze("input2.txt");
+
+        LinkedList path1 = new LinkedList();
+        path1.append(0, 0);
+        path1.append(0, 1);
+        path1.append(0, 2);
+        path1.append(0, 3);
+        path1.append(1, 3);
+        path1.append(2, 3);
+        path1.append(3, 3);
+
+        LinkedList path2 = new LinkedList();
+        path2.append(0, 0);
+        path2.append(0, 1); // Crashes into wall here
+
+        LinkedList path3 = new LinkedList();
+        path3.append(0, 0);
+        path3.append(4, 0); // Cannot move more than one square at a time
+
+        LinkedList path4 = new LinkedList();
+        path4.append(0, 0);
+        path4.append(-1, 0); 
+
+        // Test 1 - path is valid and no walls
+        assertEquals(maze1.validSolution(0, 0, 3, 3, path1), true); 
+
+        // Test 2 - the start coords don't match
+        assertEquals(maze1.validSolution(1, 0, 3, 3, path1), false); 
+
+        // Test 3 - end coords don't match 
+        assertEquals(maze1.validSolution(0, 0, 2, 3, path1), false); 
+
+        // Test 4 - crashes into wall
+        assertEquals(maze2.validSolution(0, 0, 0, 1, path2), false); 
+
+        // Test 5 - more than one square moved
+        assertEquals(maze2.validSolution(0, 0, 4, 0, path3), false); 
+
+        // Test 6 - diagonal movement
+        assertEquals(maze2.validSolution(0, 0, 1, 1, path1), false); 
+
+        // Test 7 - index out of bounds
+        assertEquals(maze1.validSolution(0, 0, -1, 1, path4), false); 
+
+        System.out.println(maze1.solve(0, 0, 0, 1));
+        // System.out.println(m.validStarts(0, 0));
+
+        endSuite();
+    }
     public static void startSuite(String name) {
         switch (PRINT_MODE) {
             case 1:

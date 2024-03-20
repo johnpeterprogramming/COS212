@@ -1,5 +1,5 @@
 public class LinkedList {
-    private CoordinateNode head;
+    public CoordinateNode head;
 
     public LinkedList() {
         this.head = null;
@@ -26,14 +26,14 @@ public class LinkedList {
 
     public void appendList(LinkedList other) {
         if (head == null) {
-            head = other.head;
+            head = new CoordinateNode(other.head.x, other.head.y);
         } else {
             appendListHelper(head, other.head);
         }
     }
     private void appendListHelper(CoordinateNode node, CoordinateNode other) {
         if (node.next == null) {
-            node.next = other;
+            node.next = new CoordinateNode(other.x, other.y);
         } else {
             appendListHelper(node.next, other);
         }
@@ -79,8 +79,22 @@ public class LinkedList {
 
     public LinkedList reversed() {
         LinkedList reversedLinkedList = new LinkedList();
-        reversedLinkedList.head = reversedHelper(head);
+        // First a deep copy of the linked list
+        reversedLinkedList.head = deepCopy(head);
+
+        // Then it can be reversed
+        reversedLinkedList.head = reversedHelper(reversedLinkedList.head);
+
         return reversedLinkedList;
+    }
+    private CoordinateNode deepCopy(CoordinateNode node) {
+        if (node == null) {
+            return null;
+        } else {
+            CoordinateNode newNode = new CoordinateNode(node.x, node.y);
+            newNode.next = deepCopy(node.next);
+            return newNode;
+        }
     }
     private CoordinateNode reversedHelper(CoordinateNode node) {
         if (node == null || node.next == null) {
@@ -90,6 +104,23 @@ public class LinkedList {
             node.next.next = node;
             node.next = null;
             return reversedListCoordinateNode;
+        }
+    }
+
+    public void pop_back() {
+        if (head == null) {
+            return;
+        } else if (head.next == null) {
+            head = null;
+        } else {
+            pop_backHelper(head);
+        }
+    }
+    private void pop_backHelper(CoordinateNode node) {
+        if (node.next.next == null) {
+            node.next = null;
+        } else {
+            pop_backHelper(node.next);
         }
     }
 }
