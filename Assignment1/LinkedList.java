@@ -25,17 +25,12 @@ public class LinkedList {
     }
 
     public void appendList(LinkedList other) {
-        if (head == null) {
-            head = new CoordinateNode(other.head.x, other.head.y);
-        } else {
-            appendListHelper(head, other.head);
-        }
+        appendListHelper(other.head);
     }
-    private void appendListHelper(CoordinateNode node, CoordinateNode other) {
-        if (node.next == null) {
-            node.next = new CoordinateNode(other.x, other.y);
-        } else {
-            appendListHelper(node.next, other);
+    private void appendListHelper(CoordinateNode other) {
+        if (other != null) {
+            append(other.x, other.y);
+            appendListHelper(other.next);;
         }
     }
 

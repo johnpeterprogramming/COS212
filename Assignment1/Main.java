@@ -51,8 +51,11 @@ public class Main {
 
 
         LinkedList ll3 = ll1.reversed();
-        // Test 7
+        // Test 8
         assertEquals(ll3.toString(), "[0,1] -> [2,0] -> [1,0] -> [0,0]");
+
+        ll1.appendList(ll3);
+        System.out.println(ll1.toString());
 
         endSuite();
     }
@@ -98,6 +101,8 @@ public class Main {
         Maze maze1 = new Maze("input.txt");
         // Hard Maze
         Maze maze2 = new Maze("input2.txt");
+        // empty Maze
+        Maze maze3 = new Maze("input3.txt");
 
         LinkedList path1 = new LinkedList();
         path1.append(0, 0);
@@ -141,8 +146,50 @@ public class Main {
         // Test 7 - index out of bounds
         assertEquals(maze1.validSolution(0, 0, -1, 1, path4), false); 
 
-        System.out.println(maze1.solve(0, 0, 0, 1));
-        // System.out.println(m.validStarts(0, 0));
+        // Test 13
+        assertEquals(maze1.validSolution(0, 0, -1, 1, null), false); 
+
+        // Test 14
+        assertEquals(maze3.validSolution(0, 0, -1, 1, null), false); 
+
+        // Test 15
+        assertEquals(maze3.validSolution(0, 0, -1, 1, path2), false); 
+
+
+        // Test 16
+        assertEquals(maze3.solve(0, 0, -1, 1), "No valid solution exists"); 
+
+        // Test 16
+        assertEquals(maze3.solve(0, 0, 0, 0), "No valid solution exists"); 
+
+        // Test 8
+        assertEquals(maze1.solve(0, 0, 1, 4), 
+                    "Solution\n" +
+                    "S----\n" + 
+                    "@----\n" +
+                    "@----\n" + 
+                    "@----\n" + 
+                    "@E---\n" + 
+                    "[0,0] -> [0,1] -> [0,2] -> [0,3] -> [0,4] -> [1,4]");
+
+        // Test 9
+        assertEquals(maze2.solve(0, 0, 6, 1), 
+                    "Solution\n" +
+                    "S@@@@@@X--\n" + 
+                    "XXXXXXEX--\n" +
+                    "[0,0] -> [1,0] -> [2,0] -> [3,0] -> [4,0] -> [5,0] -> [6,0] -> [6,1]");
+
+        // Test 10
+        assertEquals(maze2.solve(6, 1, 0, 0), 
+                    "Solution\n" +
+                    "E@@@@@@X--\n" + 
+                    "XXXXXXSX--\n" +
+                    "[6,1] -> [6,0] -> [5,0] -> [4,0] -> [3,0] -> [2,0] -> [1,0] -> [0,0]");
+
+        // Test 11
+        assertEquals(maze2.validStarts(0, 0).toString(), "[0,0] -> [1,0] -> [2,0] -> [3,0] -> [4,0] -> [5,0] -> [6,0] -> [6,1]");
+        // Test 12
+        assertEquals(maze1.validStarts(0, 0).toString(), "[0,0] -> [1,0] -> [2,0] -> [3,0] -> [4,0] -> [0,1] -> [1,1] -> [2,1] -> [3,1] -> [4,1] -> [0,2] -> [1,2] -> [2,2] -> [3,2] -> [4,2] -> [0,3] -> [1,3] -> [2,3] -> [3,3] -> [4,3] -> [0,4] -> [1,4] -> [2,4] -> [3,4] -> [4,4]");
 
         endSuite();
     }

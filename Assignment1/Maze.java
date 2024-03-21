@@ -47,6 +47,8 @@ public class Maze {
     }
 
     public boolean validSolution(int startX, int startY, int goalX, int goalY, LinkedList path) {
+        if (path == null) return false;
+        if (path.head == null) return false;
         // Start and End coordinates are valid after these checks
         if (path.head.x != startX || path.head.y != startY)
             return false;
@@ -64,6 +66,9 @@ public class Maze {
         try {
             value = map[node.y].charAt(node.x);
         } catch (StringIndexOutOfBoundsException e) {
+            // The path has gone out of bounds
+            return false;
+        } catch (ArrayIndexOutOfBoundsException e) {
             // The path has gone out of bounds
             return false;
         }
@@ -89,53 +94,99 @@ public class Maze {
 
         public String solve(int x, int y, int goalX, int goalY) {
             LinkedList path = new LinkedList(x, y);
-            solveHelper(x, y, goalX, goalY, path);
-            if (path == null)
-                return "No Solution Found";
-            return path.toString();
+            if (solveHelper(x, y, goalX, goalY, path)) {
+                
+                String[] solutionMap = new String[map.length];
+                initArrayFromMap(solutionMap, 0);
+                // System.out.println("TEST map to string:\n" + arrayToString(solutionMap, 0));
+                linkedListToMazeString(solutionMap, path.head);
+
+                solutionMap[goalY] = solutionMap[goalY].substring(0, goalX) + "E" + solutionMap[goalY].substring(goalX + 1);
+                solutionMap[y] = solutionMap[y].substring(0, x) + "S" + solutionMap[y].substring(x + 1);
+
+                return "Solution\n" +
+                // Make maze string from linked list
+                    arrayToString(solutionMap, 0) + "\n" +
+                    path.toString();  
+            }
+            return "No valid solution exists";
         }
-        private void solveHelper(int x, int y, int goalX, int goalY, LinkedList path) {
-            if (validSolution(x, y, goalX, goalY, path)) {
-                System.out.println("FOUND SOLUTION:" + path.toString());
-                return;
+        private boolean solveHelper(int x, int y, int goalX, int goalY, LinkedList path) {
+            if (validSolution(path.head.x, path.head.y, goalX, goalY, path)) {
+                return true;
             }
 
-            if (validSolutionHelper(new CoordinateNode(x, y), new LinkedList())) {
-                System.out.println("Trying LEFT");
+            if (validSolutionHelper(new CoordinateNode(x - 1, y), new LinkedList()) && !path.contains(x-1, y)) {
+                // System.out.println("Trying LEFT");
                 path.append(x - 1, y);
-                solveHelper(x - 1, y, goalX, goalY, path);
+                if (solveHelper(x - 1, y, goalX, goalY, path)) return true;
                 path.pop_back();
-                System.out.println("Tried and failed LEFT");
+                // System.out.println("Tried and failed LEFT");
             } 
-            if (validSolution(x, y + 1, goalX, goalY, path)) {
-                System.out.println("Trying UP");
+            if (validSolutionHelper(new CoordinateNode(x, y + 1), new LinkedList()) && !path.contains(x, y+1)) {
+                // System.out.println("Trying DOWN");
                 path.append(x, y + 1);
-                solveHelper(x, y + 1, goalX, goalY, path);
+                if (solveHelper(x, y + 1, goalX, goalY, path)) return true;
                 path.pop_back();
-                System.out.println("Tried and failed UP");
+                // System.out.println("Tried and failed DOWN");
             } 
-            if (validSolution(x, y - 1, goalX, goalY, path)) {
-                System.out.println("Trying Down");
+            if (validSolutionHelper(new CoordinateNode(x, y - 1), new LinkedList()) && !path.contains(x, y-1)) {
+                // System.out.println("Trying UP");
                 path.append(x, y - 1);
-                solveHelper(x, y - 1, goalX, goalY, path);
+                if (solveHelper(x, y - 1, goalX, goalY, path)) return true;
                 path.pop_back();
-                System.out.println("Tried and failed DOWN");
+                // System.out.println("Tried and failed UP");
             } 
-            if (validSolution(x + 1, y, goalX, goalY, path)) {
-                System.out.println("Trying RIGHT");
+            if (validSolutionHelper(new CoordinateNode(x + 1, y), new LinkedList()) && !path.contains(x+1, y)) {
+                // System.out.println("Trying RIGHT");
                 path.append(x + 1, y);
-                solveHelper(x+1, y, goalX, goalY, path);
+                if (solveHelper(x+1, y, goalX, goalY, path)) return true;
                 path.pop_back();
-                System.out.println("Tried and failed RIGHT");
+                // System.out.println("Tried and failed RIGHT");
             } 
 
-        }
-        private boolean inBounds(int x, int y) {
-            return (x >= 0 && x < map[y].length() && y >= 0 && y < map.length);
-        }
+            return false;
 
-    public LinkedList validStarts(int x, int y) {
-        return null;
+        }
+    private String linkedListToMazeString(String[] m, CoordinateNode node) {
+        if (node == null) return arrayToString(m, 0);
+        else {
+            // System.out.println("Node: " + node.x + " " + node.y + " -- " + m[node.y]);
+            m[node.y] = m[node.y].substring(0, node.x) + "@" + m[node.y].substring(node.x + 1);
+            return linkedListToMazeString(m, node.next);
+        }
+    }
+    private String arrayToString(String[] m, int index) {
+        if (index < m.length - 1) {
+            return m[index] + "\n" + arrayToString(m, index + 1);
+        } else return m[index];
+    }
+    private void initArrayFromMap(String[] m, int index) {
+        if (index < map.length) {
+            m[index] = new String(map[index]);
+            initArrayFromMap(m, index + 1);
+        } 
     }
 
+
+    public LinkedList validStarts(int x, int y) {
+        LinkedList validPaths = new LinkedList();
+
+        validStartsHelper(x, y, 0, 0, validPaths);
+
+        return validPaths;
+    }
+    private void validStartsHelper(int goalX, int goalY, int i, int j, LinkedList path) {
+        if (i < map.length && j < map[i].length()) {
+            if (solveHelper(j, i, goalX, goalY, new LinkedList(j, i))) {
+                path.append(j, i);
+            }
+            if (j < map[i].length() - 1) {
+                validStartsHelper(goalX, goalY, i, j + 1, path);
+            } else if (i < map.length -1) {
+                // System.out.println("Y axis is going DOWN");
+                validStartsHelper(goalX, goalY, i + 1, 0, path);
+            } 
+        }
+    }
 }
