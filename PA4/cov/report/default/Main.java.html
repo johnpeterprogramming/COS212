@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">public class Main {</span>
+<span class="fc" id="L2">    public static int PRINT_MODE = 1;</span>
+
+<span class="fc" id="L4">    public static int SUITES_RUN = 0;</span>
+<span class="fc" id="L5">    public static int SUITES_PASSED = 0;</span>
+<span class="fc" id="L6">    public static int TESTS_RUN = 0;</span>
+<span class="fc" id="L7">    public static int TESTS_PASSED = 0;</span>
+
+    public static void main(String[] args) {
+<span class="fc" id="L10">        task1();</span>
+<span class="fc" id="L11">        task2();</span>
+<span class="fc" id="L12">    }</span>
+
+    public static void task1() {
+<span class="fc" id="L15">        startSuite(&quot;Constructor, getRoot and isValid&quot;);</span>
+<span class="fc" id="L16">        RedBlackTree&lt;Integer&gt; rbt = new RedBlackTree&lt;&gt;();</span>
+<span class="fc" id="L17">        RedBlackNode&lt;Integer&gt; node1 = new RedBlackNode&lt;&gt;(2);</span>
+<span class="fc" id="L18">        RedBlackNode&lt;Integer&gt; node2 = new RedBlackNode&lt;&gt;(3);</span>
+<span class="fc" id="L19">        RedBlackNode&lt;Integer&gt; node3 = new RedBlackNode&lt;&gt;(1);</span>
+<span class="fc" id="L20">        RedBlackNode&lt;Integer&gt; node4 = new RedBlackNode&lt;&gt;(4);</span>
+
+
+        // Test 1: Null node root
+<span class="fc" id="L24">        assertEquals(rbt.getRoot(), rbt.NULL_NODE);</span>
+
+<span class="fc" id="L26">        node1.left = rbt.NULL_NODE;</span>
+<span class="fc" id="L27">        node1.right = rbt.NULL_NODE;</span>
+<span class="fc" id="L28">        node1.colour = 3; // This should be invalid because colour can only be red or black</span>
+
+<span class="fc" id="L30">        rbt.SENTINEL.right = node1;</span>
+<span class="fc" id="L31">        node1.parent = rbt.SENTINEL;</span>
+
+        // Test 2: colour must be red or black
+<span class="fc" id="L34">        assertEquals(rbt.isValidRedBlackTree(), false);</span>
+
+        // Test 3: Root must be Black
+<span class="fc" id="L37">        node1.colour = rbt.RED;</span>
+<span class="fc" id="L38">        assertEquals(rbt.isValidRedBlackTree(), false);</span>
+<span class="fc" id="L39">        node1.colour = rbt.BLACK;</span>
+
+<span class="fc" id="L41">        node4.left = rbt.NULL_NODE;</span>
+<span class="fc" id="L42">        node4.right = rbt.NULL_NODE;</span>
+<span class="fc" id="L43">        node4.colour = rbt.RED;</span>
+
+<span class="fc" id="L45">        node2.left = rbt.NULL_NODE;</span>
+<span class="fc" id="L46">        node2.right = node4;</span>
+
+        
+<span class="fc" id="L49">        node3.left = rbt.NULL_NODE;</span>
+<span class="fc" id="L50">        node3.right = rbt.NULL_NODE;</span>
+        
+<span class="fc" id="L52">        node1.right = node2;</span>
+<span class="fc" id="L53">        node2.parent = node1;</span>
+        
+<span class="fc" id="L55">        node1.left = node3;</span>
+<span class="fc" id="L56">        node3.parent = node1;</span>
+
+        // Test 4: Red node cannot have red children/same amount of black nodes for every path
+<span class="fc" id="L59">        node2.colour = rbt.RED;</span>
+<span class="fc" id="L60">        System.out.println(rbt.toString());</span>
+<span class="fc" id="L61">        assertEquals(rbt.isValidRedBlackTree(), false);</span>
+<span class="fc" id="L62">        node2.colour = rbt.BLACK;</span>
+
+        
+        // Test 4: getRoot
+<span class="fc" id="L66">        assertEquals(rbt.getRoot().data, 2);</span>
+        
+<span class="fc" id="L68">        System.out.println(rbt.toString());</span>
+        // Test 5: is Valid
+<span class="fc" id="L70">        assertEquals(rbt.isValidRedBlackTree(), true);</span>
+
+
+
+<span class="fc" id="L74">        endSuite();</span>
+<span class="fc" id="L75">    }</span>
+
+    public static void task2() {
+<span class="fc" id="L78">        startSuite(&quot;Buttom up Insert and DELETE&quot;);</span>
+
+<span class="fc" id="L80">        RedBlackTree&lt;Integer&gt; bst = new RedBlackTree&lt;&gt;();</span>
+<span class="fc" id="L81">        bst.bottomUpInsert(-2);</span>
+        
+<span class="fc" id="L83">        bst.bottomUpInsert(-1);</span>
+<span class="fc" id="L84">        bst.bottomUpInsert(0);</span>
+<span class="fc" id="L85">        bst.bottomUpInsert(1);</span>
+<span class="fc" id="L86">        bst.bottomUpInsert(2);</span>
+        
+<span class="fc" id="L88">        bst.bottomUpInsert(3);</span>
+<span class="fc" id="L89">        bst.bottomUpInsert(4);</span>
+<span class="fc" id="L90">        bst.bottomUpInsert(5);</span>
+<span class="fc" id="L91">        bst.bottomUpInsert(6);</span>
+<span class="fc" id="L92">        bst.bottomUpInsert(7);</span>
+<span class="fc" id="L93">        bst.bottomUpInsert(8);</span>
+<span class="fc" id="L94">        bst.bottomUpInsert(9);</span>
+        // Duplicate data test
+<span class="fc" id="L96">        bst.bottomUpInsert(9);</span>
+
+<span class="fc" id="L98">        bst.bottomUpInsert(-3);</span>
+<span class="fc" id="L99">        bst.bottomUpInsert(-4);</span>
+<span class="fc" id="L100">        bst.bottomUpInsert(-5);</span>
+<span class="fc" id="L101">        bst.bottomUpInsert(-6);</span>
+<span class="fc" id="L102">        bst.bottomUpInsert(-7);</span>
+
+<span class="fc" id="L104">        System.out.println(bst.toString());</span>
+
+<span class="fc" id="L106">        assertEquals(bst.isValidRedBlackTree(), true);</span>
+
+<span class="fc" id="L108">        bst.topDownDelete(-7);</span>
+<span class="fc" id="L109">        System.out.println(bst.toString());</span>
+<span class="fc" id="L110">        assertEquals(bst.isValidRedBlackTree(), true);</span>
+
+<span class="fc" id="L112">        bst.topDownDelete(-3);</span>
+<span class="fc" id="L113">        System.out.println(bst.toString());</span>
+<span class="fc" id="L114">        assertEquals(bst.isValidRedBlackTree(), true);</span>
+
+<span class="fc" id="L116">        bst.topDownDelete(1);</span>
+<span class="fc" id="L117">        System.out.println(bst.toString());</span>
+<span class="fc" id="L118">        assertEquals(bst.isValidRedBlackTree(), true);</span>
+
+<span class="fc" id="L120">        bst.topDownDelete(7);</span>
+<span class="fc" id="L121">        System.out.println(bst.toString());</span>
+<span class="fc" id="L122">        assertEquals(bst.isValidRedBlackTree(), true);</span>
+
+        // After this the values are exactly the same as memo, but still valid, just wierdd colouring thats flippedd but still correct
+<span class="fc" id="L125">        bst.topDownDelete(3);</span>
+<span class="fc" id="L126">        System.out.println(bst.toString());</span>
+<span class="fc" id="L127">        assertEquals(bst.isValidRedBlackTree(), true);</span>
+
+<span class="fc" id="L129">        endSuite();</span>
+<span class="fc" id="L130">    }</span>
+
+
+    public static void startSuite(String name) {
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        switch (PRINT_MODE) {</span>
+            case 1:
+<span class="fc" id="L136">                SUITES_RUN++;</span>
+<span class="fc" id="L137">                System.out.println(&quot;===================\nStarting: &quot; + name + &quot;\n===================&quot;);</span>
+                break;
+        }
+<span class="fc" id="L140">    }</span>
+
+    public static void endSuite() {
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        switch (PRINT_MODE) {</span>
+            case 1:
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">                if (TESTS_RUN == TESTS_PASSED) {</span>
+<span class="fc" id="L146">                    SUITES_PASSED++;</span>
+<span class="fc" id="L147">                    System.out.println(&quot;All Tests Passed \n===================&quot;);</span>
+                } else {
+<span class="nc" id="L149">                    System.out.println(&quot;Tests Failed: &quot; + (TESTS_RUN - TESTS_PASSED)</span>
+                            + &quot;\n===================&quot;);
+                }
+<span class="fc" id="L152">                TESTS_RUN = 0;</span>
+<span class="fc" id="L153">                TESTS_PASSED = 0;</span>
+                break;
+        }
+<span class="fc" id="L156">    }</span>
+
+    public static &lt;T&gt; void assertEquals(T actual, T expected) {
+<span class="pc bpc" id="L159" title="2 of 3 branches missed.">        switch (PRINT_MODE) {</span>
+            case 1:
+<span class="fc" id="L161">                TESTS_RUN++;</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">                if (actual.equals(expected)) {</span>
+<span class="fc" id="L163">                    TESTS_PASSED++;</span>
+<span class="fc" id="L164">                    System.out.println(&quot;Test &quot; + TESTS_RUN + &quot; Passed &quot;);</span>
+                } else {
+<span class="nc" id="L166">                    System.out.println(&quot;Test &quot; + TESTS_RUN + &quot; Failed: Expected &quot; + expected + &quot; but got &quot;</span>
+                            + actual);
+                }
+<span class="nc" id="L169">                break;</span>
+            case 2:
+<span class="nc" id="L171">                System.out.println(actual);</span>
+                break;
+        }
+<span class="fc" id="L174">    }</span>
+
+    public static void assertEquals(String actual, String expected) {
+<span class="nc bnc" id="L177" title="All 3 branches missed.">        switch (PRINT_MODE) {</span>
+            case 1:
+<span class="nc" id="L179">                TESTS_RUN++;</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">                if (actual.equals(expected)) {</span>
+<span class="nc" id="L181">                    TESTS_PASSED++;</span>
+<span class="nc" id="L182">                    System.out.println(&quot;Test &quot; + TESTS_RUN + &quot; Passed &quot;);</span>
+                } else {
+<span class="nc" id="L184">                    System.out.println(&quot;Test &quot; + TESTS_RUN + &quot; Failed: Expected &quot;);</span>
+<span class="nc" id="L185">                    boolean wrong = false;</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">                    for (int i = 0; i &lt; expected.length(); i++) {</span>
+<span class="nc bnc" id="L187" title="All 4 branches missed.">                        if (i &lt; actual.length() &amp;&amp; actual.charAt(i) == expected.charAt(i)) {</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">                            if (wrong) {</span>
+<span class="nc" id="L189">                                wrong = false;</span>
+                            }
+<span class="nc bnc" id="L191" title="All 2 branches missed.">                        } else if (!wrong) {</span>
+<span class="nc" id="L192">                            wrong = true;</span>
+                        }
+<span class="nc" id="L194">                        System.out.print(expected.charAt(i));</span>
+                    }
+<span class="nc" id="L196">                    System.out.println(&quot; but got &quot;);</span>
+<span class="nc" id="L197">                    wrong = false;</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">                    for (int i = 0; i &lt; actual.length(); i++) {</span>
+<span class="nc bnc" id="L199" title="All 4 branches missed.">                        if (i &lt; expected.length() &amp;&amp; actual.charAt(i) == expected.charAt(i)) {</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">                            if (wrong) {</span>
+<span class="nc" id="L201">                                wrong = false;</span>
+                            }
+<span class="nc bnc" id="L203" title="All 2 branches missed.">                        } else if (!wrong) {</span>
+<span class="nc" id="L204">                            wrong = true;</span>
+                        }
+<span class="nc" id="L206">                        System.out.print(actual.charAt(i));</span>
+                    }
+                }
+<span class="nc" id="L209">                break;</span>
+            case 2:
+<span class="nc" id="L211">                System.out.println(actual);</span>
+                break;
+        }
+<span class="nc" id="L214">    }</span>
+
+    public static void endAll() {
+<span class="nc bnc" id="L217" title="All 2 branches missed.">        switch (PRINT_MODE) {</span>
+            case 1:
+<span class="nc bnc" id="L219" title="All 2 branches missed.">                if (SUITES_RUN == SUITES_PASSED) {</span>
+<span class="nc" id="L220">                    System.out.println(</span>
+                            &quot;\n\n===================\n&quot; + &quot;All Suites Passed &quot; + SUITES_PASSED + &quot;/&quot;
+                                    + SUITES_RUN + &quot;\n===================&quot;);
+                } else {
+<span class="nc" id="L224">                    System.out.println(&quot;===================\n&quot; + &quot;Some Suites Failed: &quot; + SUITES_PASSED + &quot;/&quot;</span>
+                            + SUITES_RUN + &quot;\n===================&quot; );
+                }
+                break;
+        }
+<span class="nc" id="L229">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
