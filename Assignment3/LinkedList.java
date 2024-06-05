@@ -1,6 +1,5 @@
 import java.util.Iterator;
 
-// public class LinkedList<T> {
 public class LinkedList<T> implements Iterable<T> {
     public Node<T> head; // head of the list
     public int size; // tracks the number of elements in the list

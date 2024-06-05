@@ -25,8 +25,23 @@ public class App {
     }
 
     public static void simpleMazeTest() {
-        Maze maze = new Maze("studentMaze.txt");
-        System.out.println(maze.latexCode());
+        Maze maze1 = new Maze("studentMaze.txt");
+        System.out.println(maze1.latexCode());
+
+        Maze maze2 = Maze.createMaze(
+            "##########\n" +
+            "####T    #\n" +
+            "#    # 0 #\n" +
+            "######   #\n" +
+            "######D# #\n" +
+            "# T #  #D#\n" +
+            "##1  K   #\n" +
+            "###### # #\n" +
+            "###### # #\n" + 
+            "########S#\n"
+        );
+        System.out.println(maze2.latexCode());
+
     }
 
     public static void toFile(MazeGenerator mg, String fileName) {

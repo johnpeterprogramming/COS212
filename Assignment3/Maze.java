@@ -18,99 +18,62 @@ public class Maze {
         this.vertexes = new LinkedList<Vertex>();
         this.edges = new LinkedList<Edge>();
 
-        try {
+        File myObj = new File(fileName);
 
-            File myObj = new File(fileName);
-            Scanner myReader = new Scanner(myObj);
-            int size = 0;
+        char[][] maze = getMazeArray(myObj);
 
-            while (myReader.hasNextLine()) {
-                size++;
-                myReader.nextLine();
-            }
-            myReader.close();
+        CreateVertexesAndConnectEdges(maze);
+            
+    }
 
-            // Assumes that the maze is always square
-            // System.out.println("Size of maze is: " + size);
-            char[][] maze = new char[size][size];
-
-            // Reopen file to read into array
-            myReader = new Scanner(myObj);
-
-            // Row num
-            int i = 0;
-            while (myReader.hasNextLine()) {
-                char[] charLineArray = myReader.nextLine().toCharArray();
-                maze[i] = charLineArray;
-                i++;
-            }
-            myReader.close();
-
-            // Now data from text file is loaded into 2D array of chars
-
-            // ----- FOR PRINTING OUT CHAR ARRAY OF MAZE -----
-            // for (i=0; i < size; i++) {
-            //     for (int j=0; j< size ; j++) {
-            //         System.out.print(maze[i][j]);
-            //     }
-            //     System.out.println();
-            // }
-
-            // ----- FOR CREATING VERTICES -----
-            for (i = 0; i< size; i++) {
-                for (int j = 0; j < size; j++) {
-                    if (maze[i][j] != '#') {
-                        Vertex newVertex = new Vertex(j, i, maze[i][j]);
-                        // Sets the start vertex if it's found
-                        if (maze[i][j] == 'S') {
-                            this.start = newVertex;
-                        }
-
-                        this.vertexes.insert(newVertex);
+    private void CreateVertexesAndConnectEdges(char[][] maze) {
+        // ----- FOR CREATING VERTICES -----
+        for (int i = 0; i< maze.length; i++) {
+            for (int j = 0; j < maze.length; j++) {
+                if (maze[i][j] != '#') {
+                    Vertex newVertex = new Vertex(j, i, maze[i][j]);
+                    // Sets the start vertex if it's found
+                    if (maze[i][j] == 'S') {
+                        this.start = newVertex;
                     }
+
+                    this.vertexes.insert(newVertex);
                 }
             }
-
-            // ----- FOR CREATING EDGES -----
-            for (i = 0; i< size; i++) {
-                for (int j = 0; j < size; j++) {
-                    if (maze[i][j] != '#') {
-
-                        // Current Vertex 
-                        Vertex v1 = getVertexOfIndex(j, i); 
-                        // Vertex to the right
-                        Vertex v2 = getVertexOfIndex(j + 1, i); 
-                        // Vertex below
-                        Vertex v3 = getVertexOfIndex(j, i + 1); 
-
-                        if (v1 != null) {
-                            if (v2 != null) {
-                                // Insert edge between v1 and v2
-                                Edge newEdge = new Edge(v1, v2, 1);  // Weight is 1 by default
-                                this.edges.insert(newEdge);
-                                v1.edges.insert(newEdge);
-                                v2.edges.insert(newEdge);
-                            }
-                            if (v3 != null) {
-                                // Insert edge between v1 and v2
-                                Edge newEdge = new Edge(v1, v3, 1);  // Weight is 1 by default
-                                this.edges.insert(newEdge);
-                                v1.edges.insert(newEdge);
-                                v3.edges.insert(newEdge);
-                            }
-
-                        }
-
-                    }
-                }
-            }
-
-
-
         }
-        catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+
+        // ----- FOR CREATING EDGES -----
+        for (int i = 0; i< maze.length; i++) {
+            for (int j = 0; j < maze.length; j++) {
+                if (maze[i][j] != '#') {
+
+                    // Current Vertex 
+                    Vertex v1 = getVertexOfIndex(j, i); 
+                    // Vertex to the right
+                    Vertex v2 = getVertexOfIndex(j + 1, i); 
+                    // Vertex below
+                    Vertex v3 = getVertexOfIndex(j, i + 1); 
+
+                    if (v1 != null) {
+                        if (v2 != null) {
+                            // Insert edge between v1 and v2
+                            Edge newEdge = new Edge(v1, v2, 1);  // Weight is 1 by default
+                            this.edges.insert(newEdge);
+                            v1.edges.insert(newEdge);
+                            v2.edges.insert(newEdge);
+                        }
+                        if (v3 != null) {
+                            // Insert edge between v1 and v2
+                            Edge newEdge = new Edge(v1, v3, 1);  // Weight is 1 by default
+                            this.edges.insert(newEdge);
+                            v1.edges.insert(newEdge);
+                            v3.edges.insert(newEdge);
+                        }
+
+                    }
+
+                }
+            }
         }
     }
 
@@ -123,8 +86,59 @@ public class Maze {
         return null;
     }
 
+    static Scanner getScanner(Object input) {
+        Scanner scanner = null;
+        if (input instanceof File) {
+            try {
+                scanner = new Scanner((File) input);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else if (input instanceof String) {
+            scanner = new Scanner((String) input);
+        }
+        return scanner;
+    }
+
+    static char[][] getMazeArray(Object input) {
+        Scanner scanner = getScanner(input);
+
+        int size = 0;
+
+        while (scanner.hasNextLine()) {
+            size++;
+            scanner.nextLine();
+        }
+        scanner.close();
+
+        // Assumes that the maze is always square
+        // System.out.println("Size of maze is: " + size);
+        char[][] maze = new char[size][size];
+
+        // Reopen file to read into array
+        scanner = getScanner(input);
+
+        // Row num
+        int i = 0;
+        while (scanner.hasNextLine()) {
+            char[] charLineArray = scanner.nextLine().toCharArray();
+            maze[i] = charLineArray;
+            i++;
+        }
+        scanner.close();
+
+        return maze;
+    }
+
     static Maze createMaze(String mazeString) {
-       return null; 
+        Maze mazeObject = new Maze();
+
+        char[][] maze = Maze.getMazeArray(mazeString);
+
+        mazeObject.CreateVertexesAndConnectEdges(maze);
+
+        return mazeObject;
+
     }
 
     String latexCode(){
@@ -149,16 +163,18 @@ public class Maze {
 
     Vertex[] getVertices() {
         Vertex[] vertexArray = new Vertex[vertexes.size];
+        int count = 0;
         for (Vertex v : this.vertexes) {
-            vertexArray[v.counter] = v;
+            vertexArray[count++] = v;
         }
         return vertexArray;
     }
 
     Edge[] getEdges() {
-       Edge[] edgeArray = new Edge[edges.size];
+        Edge[] edgeArray = new Edge[edges.size];
+        int count = 0;
         for (Edge e : this.edges) {
-            edgeArray[e.counter] = e;
+            edgeArray[count++] = e;
         }
         return edgeArray;
     }
