@@ -32,12 +32,8 @@ public class LinkedList<T> implements Iterable<T> {
             }
 
             @Override
-            // TEST IF THIS WORKS
             public void remove() {
-                LinkedList.this.remove(current.data);
             }
-            
-            
         };
     }
 
@@ -161,6 +157,21 @@ public class LinkedList<T> implements Iterable<T> {
         return array;
     }
 
+    public Vertex[] getVertexesSorted() {
+        Vertex[] vertexArray = this.toVertexArray();
+
+        for (int i = 0; i < vertexArray.length-1; i++) {
+            for (int j=i + 1; j< vertexArray.length; j++) {
+                if (vertexArray[i].toString().compareTo(vertexArray[j].toString()) > 0) {
+                    Vertex temp = vertexArray[i];
+                    vertexArray[i] = vertexArray[j];
+                    vertexArray[j] = temp;
+                }
+            }
+        }
+        return vertexArray;
+    }
+
     public Edge[] toEdgeArray() {
         Edge[] array = new Edge[this.size];
         int i = 0;
@@ -170,6 +181,22 @@ public class LinkedList<T> implements Iterable<T> {
             current = current.next;
         }
         return array;
+    }
+
+    public Edge[] getEdgesSorted() {
+        Edge[] edgeArray = this.toEdgeArray();
+
+        for (int i = 0; i < edgeArray.length-1; i++) {
+            for (int j=i + 1; j< edgeArray.length; j++) {
+                if (edgeArray[i].toString().compareTo(edgeArray[j].toString()) > 0) {
+                    Edge temp = edgeArray[i];
+                    edgeArray[i] = edgeArray[j];
+                    edgeArray[j] = temp;
+                }
+            }
+        }
+
+        return edgeArray;
     }
 
 }

@@ -163,22 +163,10 @@ public class Maze {
 
     Vertex[] getVertices() {
         return this.vertexes.toVertexArray();
-        // Vertex[] vertexArray = new Vertex[vertexes.size];
-        // int count = 0;
-        // for (Vertex v : this.vertexes) {
-        //     vertexArray[count++] = v;
-        // }
-        // return vertexArray;
     }
 
     Edge[] getEdges() {
         return this.edges.toEdgeArray();
-        // Edge[] edgeArray = new Edge[edges.size];
-        // int count = 0;
-        // for (Edge e : this.edges) {
-        //     edgeArray[count++] = e;
-        // }
-        // return edgeArray;
     }
 
     void stage1Reducing() {
@@ -235,6 +223,7 @@ public class Maze {
         }
     }
 
+    // MAKE SURE ALL ADJANCENT VERTICES TO A DOOR HAVE THEIR WEIGHT DOUBLED ASWELL?
     void stage3Reducing() {
         for (Edge e: this.edges) {
             if (e.v1.symbol == 'T' || e.v2.symbol == 'T') {
@@ -245,7 +234,13 @@ public class Maze {
     }
 
     public Vertex[] getAllDoors() {
-       return null; 
+        LinkedList<Vertex> doors = new LinkedList<>();
+        for (Vertex v: this.vertexes) {
+            if (v.symbol == 'D') {
+                doors.enqueue(v);
+            }
+        }
+        return doors.getVertexesSorted();
     }
 
     public Vertex[] getAllGoals() {
@@ -253,7 +248,13 @@ public class Maze {
     }
 
     public Vertex[] getAllKeys() {
-       return null; 
+        LinkedList<Vertex> keys = new LinkedList<>();
+        for (Vertex v: this.vertexes) {
+            if (v.symbol == 'K') {
+                keys.enqueue(v);
+            }
+        }
+        return keys.getVertexesSorted();
     }
 
     boolean isReachAble(Vertex start, Vertex goal) {
@@ -268,14 +269,16 @@ public class Maze {
             if (current.equals(goal))
                 return true;
             
-            Edge[] sortedEdges = current.getEdgesSorted();
-            for (int i=0; i<sortedEdges.length; i++) {
-                Edge e = sortedEdges[i];
+            if (current.symbol != 'D' || (current.symbol == 'D' && start.symbol =='D')) {
+                Edge[] sortedEdges = current.getEdgesSorted();
+                for (int i=0; i<sortedEdges.length; i++) {
+                    Edge e = sortedEdges[i];
 
-                Vertex neighbourVertex = e.getOtherVertex(current);
-                // Can't traverse through a door or previously visited vertexes
-                if (visited.indexOf(neighbourVertex) == -1 && neighbourVertex.symbol != 'D') {
-                    toVisit.enqueue(neighbourVertex);
+                    Vertex neighbourVertex = e.getOtherVertex(current);
+                    // Can't traverse through a door or previously visited vertexes
+                    if (visited.indexOf(neighbourVertex) == -1 && toVisit.indexOf(neighbourVertex) == -1) {
+                        toVisit.enqueue(neighbourVertex);
+                    }
                 }
             }
         } while (visited.size < this.vertexes.size && toVisit.size > 0);
@@ -288,26 +291,35 @@ public class Maze {
         LinkedList<Vertex> toVisit = new LinkedList<>();
         toVisit.enqueue(start);
 
-        do {
+        while (visited.size < this.vertexes.size && toVisit.size > 0) {
             Vertex current = toVisit.pop();
             // System.out.println("Visiting: " + current.toString());
             visited.enqueue(current);
             if (current.equals(goal))
                 return visited.toVertexArray();
             
-            Edge[] sortedEdges = current.getEdgesSorted();
-            for (int i=0; i<sortedEdges.length; i++) {
-                Edge e = sortedEdges[i];
-                
-                Vertex neighbourVertex = e.getOtherVertex(current);
-                // Can't traverse through a door or previously visited vertexes
-                if (visited.indexOf(neighbourVertex) == -1 && neighbourVertex.symbol != 'D') {
-                    toVisit.enqueue(neighbourVertex);
+            // Only add other nodes if it's not a door
+            if (current.symbol != 'D' || (current.symbol == 'D' && start.symbol =='D')) {
+                Edge[] sortedEdges = current.getEdgesSorted();
+                // System.out.println("ADDING EDGES FROM " + current.toString());
+                // Loop through reversed, because of how stack pops, I still want edges to be popped in ascending order
+                for (int i=sortedEdges.length-1; i>=0; i--) {
+                    Edge e = sortedEdges[i];
+                    
+                    Vertex neighbourVertex = e.getOtherVertex(current);
+                    // Can't traverse through a door or previously visited vertexes
+                    if (visited.indexOf(neighbourVertex) == -1 && toVisit.indexOf(neighbourVertex) == -1) {
+                        // System.out.print(neighbourVertex.toString() + " ");
+                        toVisit.enqueue(neighbourVertex);
+                    }
                 }
+                // System.out.println();
+                // System.out.println();
             }
-        } while (visited.size < this.vertexes.size && toVisit.size > 0);
+
+        } 
         
-        return null;
+        return new Vertex[0];
     }
 
     double shortestPathDistanceNoDoor(Vertex start, Vertex goal) {
@@ -328,17 +340,95 @@ public class Maze {
 
     Vertex getVertex(Vertex v) {
         for (Vertex curVertex: this.vertexes) {
-            curVertex.equals(v);
+            if (curVertex.equals(v))
+                return curVertex;
         }
         return null;
     }
 
     boolean isReachAbleThroughDoor(Vertex start, Vertex goal) {
-       return false; 
+        Vertex[] keys = this.getAllKeys();
+        Vertex[] doors = this.getAllDoors();
+
+        for (int i=0; i<keys.length; i++) {
+            Vertex key = keys[i];
+            for (int j=0; j<doors.length; j++) {
+                Vertex door = doors[j];
+                // System.out.println("Comparing key: " + key + " and door: " + door);
+    
+                Vertex[] pathToKey = isReachAblePath(start, key);
+                Vertex[] pathToDoor = isReachAblePath(key, door);
+                Vertex[] pathToGoal = isReachAblePath(door, goal);
+
+                // System.out.println("Path to key exists: " + (pathToKey != null));
+                // System.out.println("Path to door exists: " + (pathToDoor != null));
+                // System.out.println("Path to goal exists: " + (pathToGoal != null));
+    
+                if (pathToKey != null && pathToDoor != null && pathToGoal != null) {
+                    return true;
+                }
+
+            }
+        }
+
+        return false;
     }
 
     Vertex[] isReachAbleThroughDoorPath(Vertex start, Vertex goal) {
-       return null; 
+        Vertex[] keys = this.getAllKeys();
+        Vertex[] doors = this.getAllDoors();
+        // System.out.println("DOORS:");
+        // System.out.println(doors[0].toString());
+        // System.out.println(doors[1].toString());
+        // System.out.println(doors[0].toString().compareTo(doors[1].toString()) < 0);
+
+        for (int i=0; i<keys.length; i++) {
+            Vertex key = keys[i];
+            for (int j=0; j<doors.length; j++) {
+                Vertex door = doors[i];
+                // System.out.println("Comparing key: " + key + " and door: " + door);
+    
+                Vertex[] pathToKey = this.isReachAblePath(start, key);
+                Vertex[] pathToDoor = this.isReachAblePath(key, door);
+                Vertex[] pathToGoal = this.isReachAblePath(door, goal);
+    
+                if (pathToKey != null && pathToDoor != null && pathToGoal != null) {
+                    // System.out.print("Path to key:");
+                    // for (Vertex v: pathToKey) {
+                    //     System.out.print(v + " ");
+                    // }
+                    // System.out.println();
+                    // System.out.print("Path to door:");
+                    // for (Vertex v: pathToDoor) {
+                    //     System.out.print(v + " ");
+                    // }
+                    // System.out.println();
+                    // System.out.print("Path to Goal:");
+                    // for (Vertex v: pathToGoal) {
+                    //     System.out.print(v + " ");
+                    // }
+                    // System.out.println();
+
+                    Vertex[] path = new Vertex[pathToKey.length + pathToDoor.length + pathToGoal.length - 2];
+
+                    int count = 0;
+                    for (int k=0; k<pathToKey.length - 1; k++) {
+                        path[count++] = pathToKey[k];
+                    }
+                    for (int k=0; k<pathToDoor.length - 1; k++) {
+                        path[count++] = pathToDoor[k];
+                    }
+                    for (int k=0; k<pathToGoal.length; k++) {
+                        path[count++] = pathToGoal[k];
+                    }
+
+                    return path;
+                }
+
+            }
+        }
+
+        return new Vertex[0];
     }
 
     double shortestPathThroughDoor(Vertex start, Vertex goal) {

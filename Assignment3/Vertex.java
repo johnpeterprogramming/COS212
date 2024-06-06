@@ -19,7 +19,7 @@ public class Vertex {
     }
 
     String latexCode(){
-        return "\\node[node] (" +counter + ") at (" + xPos + "," + (yPos) + ") {" + symbol + "};";
+        return "\\node[node] (" +counter + ") at (" + xPos + "," + (yPos) + ") {" + symbol + "(" + xPos + "," + yPos + ")};";
     }
 
     @Override
@@ -43,19 +43,6 @@ public class Vertex {
 
     // Uses selection sort
     public Edge[] getEdgesSorted() {
-        Edge[] unsorted = this.edges.toEdgeArray();
-        Edge[] sorted = new Edge[unsorted.length];
-
-        for (int i = 0; i < unsorted.length; i++) {
-            Edge smallestEdge = unsorted[i];
-            for (int j=i + 1; j< unsorted.length; j++) {
-                if (smallestEdge.toString().compareTo(unsorted[j].toString()) > 0) {
-                    smallestEdge = unsorted[j];
-                }
-            }
-            sorted[i] = smallestEdge;
-        }
-
-        return sorted;
+        return this.edges.getEdgesSorted();
     }
 }
