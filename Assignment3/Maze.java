@@ -279,7 +279,10 @@ public class Maze {
     }
 
     Vertex getVertex(Vertex v) {
-       return null; 
+        for (Vertex curVertex: this.vertexes) {
+            curVertex.equals(v);
+        }
+        return null;
     }
 
     boolean isReachAbleThroughDoor(Vertex start, Vertex goal) {
