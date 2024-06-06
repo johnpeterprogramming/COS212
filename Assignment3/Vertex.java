@@ -38,13 +38,24 @@ public class Vertex {
     }
 
     Edge[] getEdges() {
-        Edge[] edgeArray = new Edge[edges.size];
-        int i = 0;
-        Node<Edge> current = this.edges.head;
-        while (current.next != null) {
-            edgeArray[i++] = current.data;
-            current = current.next;
+        return this.edges.toEdgeArray();
+    }
+
+    // Uses selection sort
+    public Edge[] getEdgesSorted() {
+        Edge[] unsorted = this.edges.toEdgeArray();
+        Edge[] sorted = new Edge[unsorted.length];
+
+        for (int i = 0; i < unsorted.length; i++) {
+            Edge smallestEdge = unsorted[i];
+            for (int j=i + 1; j< unsorted.length; j++) {
+                if (smallestEdge.toString().compareTo(unsorted[j].toString()) > 0) {
+                    smallestEdge = unsorted[j];
+                }
+            }
+            sorted[i] = smallestEdge;
         }
-        return edgeArray;
+
+        return sorted;
     }
 }

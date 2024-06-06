@@ -42,7 +42,7 @@ public class LinkedList<T> implements Iterable<T> {
     }
 
     // Method to add an element to the end of the list
-    public void insert(T data) {
+    public void enqueue(T data) {
         Node<T> newNode = new Node<T>(data);
         if (head == null) {
             head = newNode;
@@ -54,6 +54,18 @@ public class LinkedList<T> implements Iterable<T> {
             last.next = newNode;
         }
         size++;
+    }
+
+    // Removes an returns the last element in the list
+    public T pop() {
+        if (head == null) {
+            return null;
+        }
+        T nodeToDelete = this.get(this.size - 1);
+
+        this.remove(nodeToDelete);
+
+        return nodeToDelete;
     }
 
     // Method to get the data at the specified index
@@ -70,7 +82,7 @@ public class LinkedList<T> implements Iterable<T> {
 
     // Method to get the index of an element
     // (returns -1 if the element is not found)
-    public int indexOf(Edge element) {
+    public int indexOf(T element) {
         Node<T> current = head;
         int index = 0;
         while (current != null) {
@@ -136,6 +148,28 @@ public class LinkedList<T> implements Iterable<T> {
             current = current.next;
         }
         System.out.println();
+    }
+
+    public Vertex[] toVertexArray() {
+        Vertex[] array = new Vertex[this.size];
+        int i = 0;
+        Node<Vertex> current = (Node<Vertex>) this.head;
+        while (current != null) {
+            array[i++] = current.data;
+            current = current.next;
+        }
+        return array;
+    }
+
+    public Edge[] toEdgeArray() {
+        Edge[] array = new Edge[this.size];
+        int i = 0;
+        Node<Edge> current = (Node<Edge>) this.head;
+        while (current != null) {
+            array[i++] = current.data;
+            current = current.next;
+        }
+        return array;
     }
 
 }

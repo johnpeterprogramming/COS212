@@ -37,7 +37,7 @@ public class Maze {
                         this.start = newVertex;
                     }
 
-                    this.vertexes.insert(newVertex);
+                    this.vertexes.enqueue(newVertex);
                 }
             }
         }
@@ -56,18 +56,18 @@ public class Maze {
 
                     if (v1 != null) {
                         if (v2 != null) {
-                            // Insert edge between v1 and v2
+                            // enqueue edge between v1 and v2
                             Edge newEdge = new Edge(v1, v2, 1);  // Weight is 1 by default
-                            this.edges.insert(newEdge);
-                            v1.edges.insert(newEdge);
-                            v2.edges.insert(newEdge);
+                            this.edges.enqueue(newEdge);
+                            v1.edges.enqueue(newEdge);
+                            v2.edges.enqueue(newEdge);
                         }
                         if (v3 != null) {
-                            // Insert edge between v1 and v2
+                            // enqueue edge between v1 and v2
                             Edge newEdge = new Edge(v1, v3, 1);  // Weight is 1 by default
-                            this.edges.insert(newEdge);
-                            v1.edges.insert(newEdge);
-                            v3.edges.insert(newEdge);
+                            this.edges.enqueue(newEdge);
+                            v1.edges.enqueue(newEdge);
+                            v3.edges.enqueue(newEdge);
                         }
 
                     }
@@ -162,21 +162,23 @@ public class Maze {
     }
 
     Vertex[] getVertices() {
-        Vertex[] vertexArray = new Vertex[vertexes.size];
-        int count = 0;
-        for (Vertex v : this.vertexes) {
-            vertexArray[count++] = v;
-        }
-        return vertexArray;
+        return this.vertexes.toVertexArray();
+        // Vertex[] vertexArray = new Vertex[vertexes.size];
+        // int count = 0;
+        // for (Vertex v : this.vertexes) {
+        //     vertexArray[count++] = v;
+        // }
+        // return vertexArray;
     }
 
     Edge[] getEdges() {
-        Edge[] edgeArray = new Edge[edges.size];
-        int count = 0;
-        for (Edge e : this.edges) {
-            edgeArray[count++] = e;
-        }
-        return edgeArray;
+        return this.edges.toEdgeArray();
+        // Edge[] edgeArray = new Edge[edges.size];
+        // int count = 0;
+        // for (Edge e : this.edges) {
+        //     edgeArray[count++] = e;
+        // }
+        // return edgeArray;
     }
 
     void stage1Reducing() {
@@ -196,13 +198,13 @@ public class Maze {
                 Edge newEdge = new Edge(v1, v2, weight);
                 v1.edges.remove(edge1);
                 v2.edges.remove(edge2);
-                v1.edges.insert(newEdge);
-                v2.edges.insert(newEdge);
+                v1.edges.enqueue(newEdge);
+                v2.edges.enqueue(newEdge);
                 
-                this.edges.insert(newEdge);
+                this.edges.enqueue(newEdge);
 
                 // Remove the vertex
-                vertexesToRemove.insert(v);
+                vertexesToRemove.enqueue(v);
 
                 // Remove the edges
                 this.edges.remove(edge1);
@@ -225,7 +227,7 @@ public class Maze {
                 v1.edges.remove(edge);
                 this.edges.remove(edge);
 
-                vertexesToRemove.insert(v);
+                vertexesToRemove.enqueue(v);
             }
         }
         for (Vertex vertex: vertexesToRemove) {
@@ -255,10 +257,56 @@ public class Maze {
     }
 
     boolean isReachAble(Vertex start, Vertex goal) {
-       return false; 
+        LinkedList<Vertex> visited = new LinkedList<>();
+        LinkedList<Vertex> toVisit = new LinkedList<>();
+        toVisit.enqueue(start);
+
+        do {
+            Vertex current = toVisit.pop();
+            // System.out.println("Visiting: " + current.toString());
+            visited.enqueue(current);
+            if (current.equals(goal))
+                return true;
+            
+            Edge[] sortedEdges = current.getEdgesSorted();
+            for (int i=0; i<sortedEdges.length; i++) {
+                Edge e = sortedEdges[i];
+
+                Vertex neighbourVertex = e.getOtherVertex(current);
+                // Can't traverse through a door or previously visited vertexes
+                if (visited.indexOf(neighbourVertex) == -1 && neighbourVertex.symbol != 'D') {
+                    toVisit.enqueue(neighbourVertex);
+                }
+            }
+        } while (visited.size < this.vertexes.size && toVisit.size > 0);
+        
+        return false;
     }
 
     Vertex[] isReachAblePath(Vertex start, Vertex goal) {
+        LinkedList<Vertex> visited = new LinkedList<>();
+        LinkedList<Vertex> toVisit = new LinkedList<>();
+        toVisit.enqueue(start);
+
+        do {
+            Vertex current = toVisit.pop();
+            // System.out.println("Visiting: " + current.toString());
+            visited.enqueue(current);
+            if (current.equals(goal))
+                return visited.toVertexArray();
+            
+            Edge[] sortedEdges = current.getEdgesSorted();
+            for (int i=0; i<sortedEdges.length; i++) {
+                Edge e = sortedEdges[i];
+                
+                Vertex neighbourVertex = e.getOtherVertex(current);
+                // Can't traverse through a door or previously visited vertexes
+                if (visited.indexOf(neighbourVertex) == -1 && neighbourVertex.symbol != 'D') {
+                    toVisit.enqueue(neighbourVertex);
+                }
+            }
+        } while (visited.size < this.vertexes.size && toVisit.size > 0);
+        
         return null;
     }
 
