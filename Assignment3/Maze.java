@@ -216,7 +216,21 @@ public class Maze {
     }
 
     void stage2Reducing() {// Removing dead ends
-        
+        LinkedList<Vertex> vertexesToRemove = new LinkedList<>();
+        for (Vertex v: this.vertexes) {
+            if (v.edges.size == 1 && v.symbol == ' ') {
+                Edge edge = v.edges.head.data;
+                Vertex v1 = edge.getOtherVertex(v);
+
+                v1.edges.remove(edge);
+                this.edges.remove(edge);
+
+                vertexesToRemove.insert(v);
+            }
+        }
+        for (Vertex vertex: vertexesToRemove) {
+            this.vertexes.remove(vertex);
+        }
     }
 
     void stage3Reducing() {// Doubling the weight to traps

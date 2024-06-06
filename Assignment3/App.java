@@ -43,7 +43,7 @@ public class App {
         // System.out.println(maze2.latexCode());
 
         maze1.stage1Reducing();
-        // maze1.stage2Reducing();
+        maze1.stage2Reducing();
         System.out.println(maze1.latexCode());
 
     }
