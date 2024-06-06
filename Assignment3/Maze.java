@@ -147,7 +147,7 @@ public class Maze {
         "\n" + //
         "\\begin{document}\n" + //
         "\n" + //
-        "\\begin{tikzpicture}[node/.style={circle, draw, minimum size=1.2em},yscale=-1]\n";
+        "\\begin{tikzpicture}[node/.style={circle, draw, minimum size=1.2em},yscale=-2,xscale=2]\n";
         for(Vertex v: getVertices()){
             result += v.latexCode() + "\n";
         }
@@ -179,8 +179,40 @@ public class Maze {
         return edgeArray;
     }
 
-    void stage1Reducing() {// Removing of redundant steps
-        
+    void stage1Reducing() {
+        // Remove the vertex and the original edges and create a new edge linking the two vertices with a combined weight
+        LinkedList<Vertex> vertexesToRemove = new LinkedList<Vertex>();
+        // Loop through vertexes and add to-remove list
+        for (Vertex v: this.vertexes) {
+            if (v.edges.size == 2 && v.symbol == ' ') {
+                Edge edge1 = v.edges.head.data;
+                Edge edge2 = v.edges.head.next.data;
+                double weight = edge1.weight + edge2.weight;
+
+                Vertex v1 = edge1.getOtherVertex(v);
+                Vertex v2 = edge2.getOtherVertex(v);
+
+                // Add new edge
+                Edge newEdge = new Edge(v1, v2, weight);
+                v1.edges.remove(edge1);
+                v2.edges.remove(edge2);
+                v1.edges.insert(newEdge);
+                v2.edges.insert(newEdge);
+                
+                this.edges.insert(newEdge);
+
+                // Remove the vertex
+                vertexesToRemove.insert(v);
+
+                // Remove the edges
+                this.edges.remove(edge1);
+                this.edges.remove(edge2);
+            }
+        }
+        // Remove the vertexes
+        for (Vertex v: vertexesToRemove) {
+            this.vertexes.remove(v);
+        }
     }
 
     void stage2Reducing() {// Removing dead ends

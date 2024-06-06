@@ -11,6 +11,15 @@ public class Edge {
         this.weight = weight;
     }
 
+    Vertex getOtherVertex(Vertex v){
+        if(v.equals(v1))
+            return v2;
+        else if (v.equals(v2))
+            return v1;
+        else
+            return null;
+    }
+
     @Override
     public String toString() {
         String v1Str = (v1 == null ? "NULL" : v1.toString());

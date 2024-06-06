@@ -26,21 +26,25 @@ public class App {
 
     public static void simpleMazeTest() {
         Maze maze1 = new Maze("studentMaze.txt");
-        System.out.println(maze1.latexCode());
+        // System.out.println(maze1.latexCode());
 
-        Maze maze2 = Maze.createMaze(
-            "##########\n" +
-            "####T    #\n" +
-            "#    # 0 #\n" +
-            "######   #\n" +
-            "######D# #\n" +
-            "# T #  #D#\n" +
-            "##1  K   #\n" +
-            "###### # #\n" +
-            "###### # #\n" + 
-            "########S#\n"
-        );
-        System.out.println(maze2.latexCode());
+        // Maze maze2 = Maze.createMaze(
+        //     "##########\n" +
+        //     "####T    #\n" +
+        //     "#    # 0 #\n" +
+        //     "######   #\n" +
+        //     "######D# #\n" +
+        //     "# T #  #D#\n" +
+        //     "##1  K   #\n" +
+        //     "###### # #\n" +
+        //     "###### # #\n" + 
+        //     "########S#\n"
+        // );
+        // System.out.println(maze2.latexCode());
+
+        maze1.stage1Reducing();
+        // maze1.stage2Reducing();
+        System.out.println(maze1.latexCode());
 
     }
 
