@@ -4,9 +4,32 @@ import java.io.IOException;
 public class App {
     public static void main(String[] args) throws Exception {
         // vertexTest();
-        mazeTest();
+        // mazeTest();
         // studentExample();
         // reachableTest();
+        shortestPathTest();
+    }
+
+    public static void shortestPathTest() {
+        Maze maze1 = new Maze("studentMaze.txt");
+
+        maze1.stage1Reducing();
+        maze1.stage2Reducing();
+        maze1.stage3Reducing();
+
+        Vertex[] path = maze1.shortestPathPathNoDoor(maze1.start, new Vertex(2, 5, 'T'));
+        for (Vertex v: path) {
+            System.out.print(v + ":" + v.dist + " ");
+        }
+        System.out.println();
+
+        // Vertex[] path2 = maze1.shortestPathPathNoDoor(maze1.start, new Vertex(4, 1, 'T'));
+        // for (Vertex v: path2) {
+        //     System.out.print(v + " ");
+        // }
+        // System.out.println();
+
+        System.out.println(maze1.shortestPathDistanceNoDoor(maze1.start, new Vertex(2, 5, 'T')));
     }
 
     public static void vertexTest() {

@@ -64,6 +64,17 @@ public class LinkedList<T> implements Iterable<T> {
         return nodeToDelete;
     }
 
+    public T dequeue() {
+        if (head == null) {
+            return null;
+        }
+        T nodeToDelete = this.get(0);
+
+        this.remove(nodeToDelete);
+
+        return nodeToDelete;
+    }
+
     // Method to get the data at the specified index
     public T get(int index) {
         if (index < 0 || index >= size) {
@@ -189,6 +200,22 @@ public class LinkedList<T> implements Iterable<T> {
         for (int i = 0; i < edgeArray.length-1; i++) {
             for (int j=i + 1; j< edgeArray.length; j++) {
                 if (edgeArray[i].toString().compareTo(edgeArray[j].toString()) > 0) {
+                    Edge temp = edgeArray[i];
+                    edgeArray[i] = edgeArray[j];
+                    edgeArray[j] = temp;
+                }
+            }
+        }
+
+        return edgeArray;
+    }
+
+    public Edge[] getEdgesSortedByWeight() {
+        Edge[] edgeArray = this.toEdgeArray();
+
+        for (int i = 0; i < edgeArray.length-1; i++) {
+            for (int j=i + 1; j< edgeArray.length; j++) {
+                if (edgeArray[i].weight > edgeArray[j].weight) {
                     Edge temp = edgeArray[i];
                     edgeArray[i] = edgeArray[j];
                     edgeArray[j] = temp;

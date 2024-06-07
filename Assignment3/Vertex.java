@@ -6,6 +6,10 @@ public class Vertex {
     static int globalCounter = 0;
     int counter = globalCounter++;
 
+    // For Dijkstra's algorithm
+    double dist = Double.POSITIVE_INFINITY;
+    Vertex prevVisited = null;
+
     Vertex(int x, int y, char sym) {
         this.xPos = x;
         this.yPos = y;
@@ -44,5 +48,10 @@ public class Vertex {
     // Uses selection sort
     public Edge[] getEdgesSorted() {
         return this.edges.getEdgesSorted();
+    }
+
+    // Uses selection sort
+    public Edge[] getEdgesSortedByWeight() {
+        return this.edges.getEdgesSortedByWeight();
     }
 }
