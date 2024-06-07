@@ -609,19 +609,31 @@ public class Maze {
     }
 
     boolean canReachGoal(char targetGoal){
-       return false; 
+        for (Vertex v: this.vertexes) {
+            if (v.symbol == targetGoal) {
+                return isReachAble(this.start, v);
+            }
+        }
+        return false;
     }
 
     Vertex[] canReachGoalPath(char targetGoal){
-       return null; 
+        for (Vertex v: this.vertexes) {
+            if (v.symbol == targetGoal) {
+                return isReachAblePath(this.start, v);
+            }
+        }
+        return new Vertex[0];
     }
 
     double getRatio(Vertex goal){
-       return 0; 
+        if (isReachAble(this.start, goal))
+            return ((int) (goal.symbol - '0') * 10)  / shortestPathDistanceNoDoor(this.start, goal);
+        return ((int) (goal.symbol - '0') * 10) / shortestPathDistanceDoor(goal, goal, true);
     }
 
     Vertex getRecommendedGoal(){
-       return null; 
+       return new Vertex(0, 0, '1');
     }
 
     double getRecommendedRatio(){
@@ -629,7 +641,7 @@ public class Maze {
     }
 
     Vertex[] getRecommendedPath(){
-        return null;
+        return new Vertex[0];
     }
 
 

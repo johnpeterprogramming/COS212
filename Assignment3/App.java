@@ -3,10 +3,10 @@ import java.io.IOException;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        // vertexTest();
-        // mazeTest();
-        // studentExample();
-        // reachableTest();
+        vertexTest();
+        mazeTest();
+        studentExample();
+        reachableTest();
         shortestPathTest();
     }
 
@@ -39,6 +39,8 @@ public class App {
         }
         System.out.println();
         System.out.println(maze1.shortestPathThroughDoor(maze1.getVertex(new Vertex(8, 9, 'S')), maze1.getVertex(new Vertex(4, 1, 'T'))));
+
+        System.out.println("treasure ratio from s to 1" + maze1.getRatio(maze1.getVertex(new Vertex(2, 6, '1'))));
     }
 
     public static void vertexTest() {
@@ -163,10 +165,10 @@ public class App {
         for(Vertex v: path){
             System.out.println(v);
         }
-        // System.out.println(m.shortestPathDistanceNoDoor(m.getVertex(new Vertex(8,9, 'S')), m.getVertex(new Vertex(4,1, 'T'))));
-        // System.out.println(m.shortestPathDistanceNoDoor(m.getVertex(new Vertex(8,9, 'S')), m.getVertex(new Vertex(2,6, '1'))));
-        // System.out.println(m.shortestPathThroughDoor(m.getVertex(new Vertex(8,9, 'S')), m.getVertex(new Vertex(4,1, 'T'))));
-        // System.out.println(m.shortestPathThroughDoor(m.getVertex(new Vertex(8,9, 'S')), m.getVertex(new Vertex(2,6, '1'))));
-        // System.out.println(m.getRatio(m.getVertex(new Vertex(2,6, '1'))));
+        System.out.println(m.shortestPathDistanceNoDoor(m.getVertex(new Vertex(8,9, 'S')), m.getVertex(new Vertex(4,1, 'T'))));
+        System.out.println(m.shortestPathDistanceNoDoor(m.getVertex(new Vertex(8,9, 'S')), m.getVertex(new Vertex(2,6, '1'))));
+        System.out.println(m.shortestPathThroughDoor(m.getVertex(new Vertex(8,9, 'S')), m.getVertex(new Vertex(4,1, 'T'))));
+        System.out.println(m.shortestPathThroughDoor(m.getVertex(new Vertex(8,9, 'S')), m.getVertex(new Vertex(2,6, '1'))));
+        System.out.println(m.getRatio(m.getVertex(new Vertex(2,6, '1'))));
     }
 }
