@@ -398,11 +398,79 @@ public class Maze {
     }
 
     double shortestPathDistanceDoor(Vertex start, Vertex goal, boolean goUp) {
-       return 0; 
+        Vertex[] path = this.shortestPathPathDoor(start, goal, goUp);
+
+        if (path.length <= 0)
+            return Double.POSITIVE_INFINITY;
+        // System.out.println("path is not empty");
+        return path[path.length - 1].dist;
     }
 
     Vertex[] shortestPathPathDoor(Vertex start, Vertex goal, boolean goUp) {
-      return null; 
+        if (start == null || goal == null)
+            return new Vertex[0];
+        // Implementing Dijkstra's algorithm
+        // Reconstruct path
+        // No doors!
+        LinkedList<Vertex> unvisited = new LinkedList<>();
+        LinkedList<Vertex> toVisit = new LinkedList<>();
+        
+        for (Vertex v: this.vertexes) {
+            getVertex(v).dist = Double.POSITIVE_INFINITY;
+            getVertex(v).prevVisited = null;
+            unvisited.enqueue(v);
+        }
+        
+        getVertex(start).dist = 0;
+        toVisit.enqueue(start);
+        while (unvisited.size > 0 && toVisit.size > 0) {
+            Vertex current = toVisit.dequeue();
+            // System.out.println("Visiting: " + current.toString());
+            unvisited.remove(current);
+
+            Edge[] sortedEdges = current.getEdgesSortedByWeight();
+
+            for (Edge e: sortedEdges) {
+
+                Vertex neighbour = e.getOtherVertex(current);
+
+                double newDist = current.dist + e.weight;
+
+                if (newDist < neighbour.dist) {
+                    // System.out.println("Set vertex: " + neighbour.toString() + " to " + newDist);
+                    neighbour.dist = newDist;
+                    neighbour.prevVisited = current;
+
+                    if (toVisit.indexOf(neighbour) == -1 && unvisited.indexOf(neighbour) != -1 && neighbour.symbol != 'D')
+                        toVisit.enqueue(neighbour);
+                }
+
+            }
+        }
+
+        if (unvisited.indexOf(goal) != -1) {
+            // If goal hasn't been visited, the shortest path to goal wasn't found(because door or vertex doesn't exist)
+            return new Vertex[0]; 
+        } else {
+            // System.out.println("Found goal: " + goal.toString());
+            LinkedList<Vertex> shortestPathReversed = new LinkedList<>();
+            LinkedList<Vertex> shortestPath = new LinkedList<>();
+            Vertex current = getVertex(goal);
+            while (current != start) {
+                // System.out.println("Adding: " + current.toString());
+                shortestPathReversed.enqueue(current);
+                current = current.prevVisited;
+            }
+            shortestPathReversed.enqueue(start);
+            while (shortestPathReversed.size > 0) {
+                Vertex v = shortestPathReversed.pop();
+                // System.out.print(v + " ");
+                shortestPath.enqueue(v);
+            }
+            // System.out.println();
+
+            return shortestPath.toVertexArray(); 
+        }
     }
 
     Vertex getVertex(Vertex v) {

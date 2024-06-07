@@ -30,6 +30,8 @@ public class App {
         // System.out.println();
 
         System.out.println(maze1.shortestPathDistanceNoDoor(maze1.start, new Vertex(2, 5, 'T')));
+
+        System.out.println(maze1.shortestPathDistanceDoor(maze1.getVertex(new Vertex(8, 5, 'D')), maze1.getVertex(new Vertex(2, 5, 'T')), false));
     }
 
     public static void vertexTest() {
