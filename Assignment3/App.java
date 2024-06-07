@@ -23,15 +23,22 @@ public class App {
         }
         System.out.println();
 
-        // Vertex[] path2 = maze1.shortestPathPathNoDoor(maze1.start, new Vertex(4, 1, 'T'));
-        // for (Vertex v: path2) {
-        //     System.out.print(v + " ");
-        // }
-        // System.out.println();
+        Vertex[] path2 = maze1.shortestPathPathNoDoor(maze1.start, new Vertex(4, 1, 'T'));
+        for (Vertex v: path2) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
 
         System.out.println(maze1.shortestPathDistanceNoDoor(maze1.start, new Vertex(2, 5, 'T')));
 
         System.out.println(maze1.shortestPathDistanceDoor(maze1.getVertex(new Vertex(8, 5, 'D')), maze1.getVertex(new Vertex(2, 5, 'T')), false));
+
+        Vertex[] path3 = maze1.shortestPathThroughDoorPath(maze1.getVertex(new Vertex(8, 9, 'S')), maze1.getVertex(new Vertex(4, 1, 'T')));
+        for (Vertex v: path3) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+        System.out.println(maze1.shortestPathThroughDoor(maze1.getVertex(new Vertex(8, 9, 'S')), maze1.getVertex(new Vertex(4, 1, 'T'))));
     }
 
     public static void vertexTest() {

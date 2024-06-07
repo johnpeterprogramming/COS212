@@ -441,7 +441,7 @@ public class Maze {
                     neighbour.dist = newDist;
                     neighbour.prevVisited = current;
 
-                    if (toVisit.indexOf(neighbour) == -1 && unvisited.indexOf(neighbour) != -1 && neighbour.symbol != 'D')
+                    if (toVisit.indexOf(neighbour) == -1 && unvisited.indexOf(neighbour) != -1)
                         toVisit.enqueue(neighbour);
                 }
 
@@ -541,11 +541,71 @@ public class Maze {
     }
 
     double shortestPathThroughDoor(Vertex start, Vertex goal) {
-       return 0; 
+        Vertex[] path = this.shortestPathThroughDoorPath(start, goal);
+
+        if (path.length <= 0)
+            return Double.POSITIVE_INFINITY;
+        // System.out.println("path is not empty");
+        return path[path.length - 1].dist; 
     }
 
     Vertex[] shortestPathThroughDoorPath(Vertex start, Vertex goal) {
-       return null; 
+       Vertex[] keys = this.getAllKeys();
+        Vertex[] doors = this.getAllDoors();
+
+        for (int i=0; i<keys.length; i++) {
+            Vertex key = keys[i];
+            for (int j=0; j<doors.length; j++) {
+                Vertex door = doors[i];
+    
+                Vertex[] pathToKey = this.shortestPathPathNoDoor(start, key);
+                if (pathToKey.length <= 0) {
+                    // System.out.println("path to key is empty");
+                    continue;
+                }
+                double pathToKeyDist = pathToKey[pathToKey.length - 1].dist;
+
+                Vertex[] pathToDoor = this.shortestPathPathDoor(key, door, true);
+                if (pathToDoor.length <= 0) {
+                    
+                    System.out.println("path to door is empty");
+                    continue;
+                }
+
+                double pathToDoorDist = pathToDoor[pathToDoor.length - 1].dist;
+
+                Vertex[] pathToGoal = this.shortestPathPathDoor(door, goal, true);
+                if (pathToGoal.length <= 0) {
+
+                    System.out.println("path to goal is empty");
+                    continue;
+                }
+                double pathToGoalDist = pathToGoal[pathToGoal.length - 1].dist;
+                
+                
+                if (pathToKey != null && pathToDoor != null && pathToGoal != null) {
+                    Vertex[] path = new Vertex[pathToKey.length + pathToDoor.length + pathToGoal.length - 2];
+                    
+                    int count = 0;
+                    for (int k=0; k<pathToKey.length - 1; k++) {
+                        path[count++] = pathToKey[k];
+                    }
+                    for (int k=0; k<pathToDoor.length - 1; k++) {
+                        path[count++] = pathToDoor[k];
+                    }
+                    for (int k=0; k<pathToGoal.length; k++) {
+                        path[count++] = pathToGoal[k];
+                    }
+
+                    getVertex(goal).dist = pathToKeyDist + pathToDoorDist + pathToGoalDist;
+
+                    return path;
+                }
+
+            }
+        }
+
+        return new Vertex[0];
     }
 
     boolean canReachGoal(char targetGoal){
