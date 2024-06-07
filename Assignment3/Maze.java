@@ -505,37 +505,42 @@ public class Maze {
     }
 
     Vertex[] isReachAbleThroughDoorPath(Vertex start, Vertex goal) {
-        Vertex[] keys = this.getAllKeys();
-        Vertex[] doors = this.getAllDoors();
-
-        for (int i=0; i<keys.length; i++) {
-            Vertex key = keys[i];
-            for (int j=0; j<doors.length; j++) {
-                Vertex door = doors[i];
+        try {
+            Vertex[] keys = this.getAllKeys();
+            Vertex[] doors = this.getAllDoors();
     
-                Vertex[] pathToKey = this.isReachAblePath(start, key);
-                Vertex[] pathToDoor = this.isReachAblePath(key, door);
-                Vertex[] pathToGoal = this.isReachAblePath(door, goal);
+            for (int i=0; i<keys.length; i++) {
+                Vertex key = keys[i];
+                for (int j=0; j<doors.length; j++) {
+                    Vertex door = doors[i];
+        
+                    Vertex[] pathToKey = this.isReachAblePath(start, key);
+                    Vertex[] pathToDoor = this.isReachAblePath(key, door);
+                    Vertex[] pathToGoal = this.isReachAblePath(door, goal);
+        
+                    if (pathToKey != null && pathToDoor != null && pathToGoal != null) {
+                        Vertex[] path = new Vertex[pathToKey.length + pathToDoor.length + pathToGoal.length - 2];
     
-                if (pathToKey != null && pathToDoor != null && pathToGoal != null) {
-                    Vertex[] path = new Vertex[pathToKey.length + pathToDoor.length + pathToGoal.length - 2];
-
-                    int count = 0;
-                    for (int k=0; k<pathToKey.length - 1; k++) {
-                        path[count++] = pathToKey[k];
+                        int count = 0;
+                        for (int k=0; k<pathToKey.length - 1; k++) {
+                            path[count++] = pathToKey[k];
+                        }
+                        for (int k=0; k<pathToDoor.length - 1; k++) {
+                            path[count++] = pathToDoor[k];
+                        }
+                        for (int k=0; k<pathToGoal.length; k++) {
+                            path[count++] = pathToGoal[k];
+                        }
+    
+                        return path;
                     }
-                    for (int k=0; k<pathToDoor.length - 1; k++) {
-                        path[count++] = pathToDoor[k];
-                    }
-                    for (int k=0; k<pathToGoal.length; k++) {
-                        path[count++] = pathToGoal[k];
-                    }
-
-                    return path;
+    
                 }
-
             }
-        }
+
+        } catch (Exception e) {
+            return new Vertex[0];
+        } 
 
         return new Vertex[0];
     }
@@ -568,7 +573,7 @@ public class Maze {
                 Vertex[] pathToDoor = this.shortestPathPathDoor(key, door, true);
                 if (pathToDoor.length <= 0) {
                     
-                    System.out.println("path to door is empty");
+                    // System.out.println("path to door is empty");
                     continue;
                 }
 
@@ -577,7 +582,7 @@ public class Maze {
                 Vertex[] pathToGoal = this.shortestPathPathDoor(door, goal, true);
                 if (pathToGoal.length <= 0) {
 
-                    System.out.println("path to goal is empty");
+                    // System.out.println("path to goal is empty");
                     continue;
                 }
                 double pathToGoalDist = pathToGoal[pathToGoal.length - 1].dist;
@@ -628,8 +633,8 @@ public class Maze {
 
     double getRatio(Vertex goal){
         if (isReachAble(this.start, goal))
-            return ((int) (goal.symbol - '0') * 10)  / shortestPathDistanceNoDoor(this.start, goal);
-        return ((int) (goal.symbol - '0') * 10) / shortestPathDistanceDoor(goal, goal, true);
+            return ((int) (goal.symbol - '0') * 100)  / shortestPathDistanceNoDoor(this.start, goal);
+        return ((int) (goal.symbol - '0') * 100) / shortestPathDistanceDoor(goal, goal, true);
     }
 
     Vertex getRecommendedGoal(){
